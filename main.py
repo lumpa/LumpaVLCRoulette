@@ -5,7 +5,6 @@ from pathlib import Path
 import subprocess
 import argparse
 
-# Import config
 import config
 
 
@@ -53,7 +52,11 @@ def create_xspf_playlist(files, output_path):
 
 
 def launch_vlc_playlist_file():
-	subprocess.run([config.VLC_PATH, config.PLAYLIST_FILENAME])
+	subprocess.run([
+		config.VLC_PATH,
+		"--fullscreen",
+		config.PLAYLIST_FILENAME
+	])
 
 
 def main():
