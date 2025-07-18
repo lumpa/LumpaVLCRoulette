@@ -2,11 +2,16 @@ import os
 import random
 import xml.etree.ElementTree as ET
 from pathlib import Path
+import sys
 import subprocess
 import argparse
 
 import config
 
+SW_HIDE = 0
+SW_SHOWNORMAL = 1
+SW_SHOWMINIMIZED = 2
+SW_SHOWMAXIMIZED = 3
 
 def find_tv_shows(base_path):
 	shows = {}
@@ -52,11 +57,17 @@ def create_xspf_playlist(files, output_path):
 
 
 def launch_vlc_playlist_file():
+	startupinfo = None
+	if sys.platform == "win32":
+		startupinfo = subprocess.STARTUPINFO()
+		startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+		startupinfo.wShowWindow = SW_SHOWNORMAL  # or 3 for SW_SHOWMAXIMIZED
+
 	subprocess.run([
 		config.VLC_PATH,
 		"--fullscreen",
 		config.PLAYLIST_FILENAME
-	])
+	], startupinfo=startupinfo)
 
 
 def main():
