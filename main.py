@@ -13,6 +13,14 @@ SW_SHOWNORMAL = 1
 SW_SHOWMINIMIZED = 2
 SW_SHOWMAXIMIZED = 3
 
+
+def close_existing_vlc():
+	if sys.platform == "win32":
+		subprocess.run(["taskkill", "/f", "/im", "vlc.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+	else:
+		subprocess.run(["pkill", "vlc"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
 def find_tv_shows(base_path):
 	shows = {}
 	for show_dir in base_path.iterdir():
@@ -91,6 +99,10 @@ def main():
 
 	for ep in selected:
 		print("Selected:", ep)
+
+	if config.CLOSE_EXISTING_VLC:
+		print("Closing any existing VLC instances...")
+		close_existing_vlc()
 
 	if config.CREATE_PLAYLIST_FILE:
 		create_xspf_playlist(selected, Path(config.PLAYLIST_FILENAME))
